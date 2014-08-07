@@ -45,10 +45,10 @@ $app->get('/', function() {
 });
 
 $app->get('/recipe/:id', function($id) use ($app) {
-    echo "Recipe: $id";
-    echo "<br>";
+//    echo "Recipe: $id";
+//    echo "<br>";
 //    $app->flash('error', 'Login required');
-    echo $app->urlFor('recipe2', array('id' => 999));
+    $app->render('recipe_details.php', ['url' => $app->urlFor('recipe2', ['id' => 999])]);
 })->name('recipe2');
 
 $app->post('/recipe/:id', function($id) {
