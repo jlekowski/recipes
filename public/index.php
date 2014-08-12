@@ -10,7 +10,7 @@ $app = new Slim(array(
     'mode' => 'development',
 //    'log.writer' => new \My\LogWriter(),
 //    'log.level' => \Slim\Log::DEBUG,
-//    'log.enabled' => true,
+    'log.enabled' => true,
 //    'view' => new \My\View(),
     ''
 ));
@@ -36,19 +36,50 @@ $app = new Slim(array(
 //    ));
 //});
 
+//$app->error(function (\Exception $e) use ($app) {
+//    exit('errorek');
+//});
+
 \Slim\Route::setDefaultConditions(array(
     'id' => '\d+'
 ));
 
-$app->get('/', function() {
-    echo "Recipes";
+$app->get('/', function() use ($app) {
+    $app->render('recipes.php');
+});
+
+$app->get('/ingredients', function() use ($app) {
+    $app->render('ingredients.php');
+});
+
+$app->post('/ingredients', function() use ($app) {
+    $request = $app->request;
+    echo "<pre>" . print_r($request->post(), 1);
+    exit;
+//    $body = $request->post();
+//    $app->response->headers->set('Content-Type', "application/json");
+//    $app->response->setBody(json_encode($body));
+
+    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+    $stm = $oDB->prepare("INSERT INTO ingredient VALUES (NULL, ?, ?, ?, ?)");
+    $stm->execute([$request->post('name'), $request->post('unit'), $request->post('calories'), time()]);
+
+    $app->response->setStatus(201);
+});
+
+$app->delete('/ingredients/:id', function($id) use ($app) {
+    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+    $stm = $oDB->prepare("DELETE FROM ingredient WHERE id = ?");
+    $stm->execute([$id]);
+
+    $app->response->setStatus(200);
 });
 
 $app->get('/recipe/:id', function($id) use ($app) {
 //    echo "Recipe: $id";
 //    echo "<br>";
 //    $app->flash('error', 'Login required');
-    $app->render('recipe_details.php', ['url' => $app->urlFor('recipe2', ['id' => 999])]);
+    $app->render('recipe_details.php', ['id' => $id, 'url' => $app->urlFor('recipe2', ['id' => $id])]);
 })->name('recipe2');
 
 $app->post('/recipe/:id', function($id) {
