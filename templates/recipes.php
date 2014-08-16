@@ -1,80 +1,60 @@
 <?php
-
-$oDB = new PDO("sqlite:../db/recipes.sqlite");
-
-// creating recipe table
-$query[] = "
-    CREATE TABLE IF NOT EXISTS recipe (
-        id          INTEGER PRIMARY KEY,
-        name        TEXT,
-        description TEXT,
-        timestamp   NUMERIC
-    )
-";
-
-// creating ingredient table
-$query[] = "
-    CREATE TABLE IF NOT EXISTS ingredient (
-        id        INTEGER PRIMARY KEY,
-        name      TEXT,
-        unit      TEXT,
-        calories  NUMERIC,
-        timestamp NUMERIC
-    )
-";
-
-// creating recipe_ingredient table
-$query[] = "
-    CREATE TABLE IF NOT EXISTS recipe_ingredient (
-        id            INTEGER PRIMARY KEY,
-        recipe_id     INTEGER,
-        ingredient_id INTEGER,
-        quantity      INTEGER,
-        timestamp     NUMERIC
-    )
-";
-
-$a = [];
-foreach ($query as $value) {
-    $a[] = $oDB->query($value);
-}
-
-
-//$oDB->query("INSERT INTO recipe VALUES(1,'test', 'test recipe', " . time() . ")");
-//echo "<pre>" . print_r($oDB->errorInfo(), 1);
-//exit;
-
-$stm = $oDB->query("SELECT * FROM recipe");
-$recipes = $stm->fetchall(\PDO::FETCH_OBJ);
-//var_dump($result);
+$recipes = $this->data['recipes'];
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recipes</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
-    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+    <script src="/js/recipes.js"></script>
 </head>
-
 <body>
-<table>
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Created</th>
-        </tr>
-    </thead>
-    <tbody>
-        <?php foreach ($recipes as $recipe): ?>
+<nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <!-- Brand and toggle get grouped for better mobile display -->
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="glyphiconicon-bar"></span>
+                <span class="glyphiconicon-bar"></span>
+                <span class="glyphiconicon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Recipes</a>
+        </div>
+
+        <!-- Collect the nav links, forms, and other content for toggling -->
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
+                <li class="active"><a href="/">Recipes</a></li>
+                <li><a href="/ingredients">Ingredients</a></li>
+            </ul>
+        </div>
+    </div>
+</nav>
+<div class="container">
+    <h3>Recipes <a href="/recipe" class="btn btn-xs btn-success recipe-add">+Add</a></h3>
+    <table class="table table-striped table-hover">
+        <thead>
             <tr>
-                <td><a href="/recipe/<?= $recipe->id ?>"><?= $recipe->name ?></a></td>
-                <td><?= date('Y-m-d H:i:s', $recipe->timestamp) ?></td>
+                <th>#</th>
+                <th>Name</th>
+                <th></th>
             </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            <?php foreach ($recipes as $recipe): ?>
+            <tr class="recipe-row" data-id="<?=$recipe->id?>">
+                <td><?=$recipe->id?></td>
+                <td><a href="/recipe/<?=$recipe->id?>"><?=$recipe->name?></a></td>
+                <td><i class="glyphicon glyphicon-remove recipe-ingredient-delete"></i></td>
+            </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
+</div>
 </body>
 </html>
