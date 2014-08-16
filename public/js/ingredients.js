@@ -79,4 +79,10 @@ $().ready(function() {
             $modal.modal('show');
         });
     });
+
+    $('#ingredient-add-modal form :input').on('keydown', function(e) {
+        if (e.which == 13) {
+            $('#ingredient-add-submit').trigger('click');
+        }
+    });
 });
