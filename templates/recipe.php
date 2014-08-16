@@ -99,6 +99,7 @@ $total = ['weight' => 0, 'kcal' => 0, 'protein' => 0, 'fat' => 0, 'carb' => 0];
             </tr>
             <?php endforeach; ?>
         </tbody>
+        <?php if (!empty($recipeIngredients)): ?>
         <tfoot>
             <tr>
                 <th>TOTAL:</th>
@@ -122,6 +123,7 @@ $total = ['weight' => 0, 'kcal' => 0, 'protein' => 0, 'fat' => 0, 'carb' => 0];
                 <th></th>
             </tr>
         </tfoot>
+        <?php endif; ?>
     </table>
     <?php endif; ?>
 </div>

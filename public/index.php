@@ -216,8 +216,8 @@ function create_tables(PDO $oDB) {
 }
 
 function drop_tables(PDO $oDB) {
-//    $query[] = "DROP TABLE recipe";
-//    $query[] = "DROP TABLE ingredient";
+    $query[] = "DROP TABLE recipe";
+    $query[] = "DROP TABLE ingredient";
     $query[] = "DROP TABLE recipe_ingredient";
 
     $a = [];

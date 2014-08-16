@@ -13,8 +13,10 @@ class Recipe
 
     public function addFromRequest(\Slim\Http\Request $request)
     {
-        $stm = $this->oDB->prepare("INSERT INTO recipe VALUES (NULL, ?, ?, ?, ?)");
-        $stm->execute([$request->post('name'), $request->post('portion-weight'), $request->post('portion-calories'), $request->post('standard-calories')]);
+        $stm = $this->oDB->prepare("INSERT INTO recipe VALUES (NULL, ?, ?)");
+        $stm->execute([$request->post('name'), $request->post('description')]);
+
+        return $this->oDB->lastInsertId();
     }
 
     public function updateFromRequest(\Slim\Http\Request $request)
