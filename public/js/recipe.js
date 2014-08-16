@@ -21,8 +21,8 @@ $().ready(function() {
 
         $.ajax({
             url: '/recipeIngredients' + (id ? '/' + id : ''),
-            type: (id ? 'PUT' : 'POST'),
-            data: $form.serialize()
+            type: 'POST',
+            data: $form.serialize() + (id ? '&_METHOD=PUT' : '')
         }).done(function(response) {
             console.log(response);
             location.reload();
@@ -46,7 +46,8 @@ $().ready(function() {
 
         $.ajax({
             url: '/recipeIngredients/' + id,
-            type: 'DELETE',
+            type: 'POST',
+            data: '_METHOD=DELETE'
         }).done(function(response) {
             console.log(response);
             location.reload();
