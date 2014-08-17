@@ -3,6 +3,7 @@
 require_once '../vendor/autoload.php';
 
 use Slim\Slim;
+use Slim\Route;
 use Recipes\Ingredient;
 use Recipes\Recipe;
 use Recipes\RecipeIngredient;
@@ -51,9 +52,24 @@ $app = new Slim(array(
 //    $app->render('recipe_details.php', ['id' => $id, 'url' => $app->urlFor('recipe2', ['id' => $id])]);
 //})->name('recipe2');
 
-\Slim\Route::setDefaultConditions(array(
+// ------- ROUTE SETTINGS -------
+
+Route::setDefaultConditions(array(
     'id' => '\d+'
 ));
+
+// ------- HOOKS -------
+$app->hook('slim.before.dispatch', function() use ($app) {
+    if (!$app->request->isAjax()) {
+        $app->render('header.php');
+    }
+});
+
+$app->hook('slim.after.dispatch', function() use ($app) {
+    if (!$app->request->isAjax()) {
+        $app->render('footer.php');
+    }
+});
 
 // ------- RECIPES -------
 $app->get('/', function() use ($app) {
