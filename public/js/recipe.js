@@ -74,4 +74,11 @@ $().ready(function() {
             $modal.modal('show');
         });
     });
+
+    $('#recipe-ingredient-add-modal form :input').on('keydown', function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            $('#recipe-ingredient-add-submit').trigger('click');
+        }
+    });
 });
