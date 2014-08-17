@@ -41,7 +41,7 @@ class Recipe
 
     public function getAll()
     {
-        $stm = $this->oDB->query("SELECT * FROM recipe");
+        $stm = $this->oDB->query("SELECT * FROM recipe ORDER BY name");
 
         return $stm->fetchall(\PDO::FETCH_OBJ);
     }

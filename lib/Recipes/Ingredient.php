@@ -39,7 +39,7 @@ class Ingredient
 
     public function getAll()
     {
-        $stm = $this->oDB->query("SELECT * FROM ingredient");
+        $stm = $this->oDB->query("SELECT * FROM ingredient ORDER BY name");
 
         return $stm->fetchall(\PDO::FETCH_OBJ);
     }
