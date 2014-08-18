@@ -17,6 +17,8 @@ class RecipeIngredient
     {
         $stm = $this->oDB->prepare("INSERT INTO recipe_ingredient VALUES (NULL, ?, ?, ?)");
         $stm->execute([$request->post('recipe_id'), $request->post('ingredient_id'), $request->post('weight')]);
+
+        return $this->oDB->lastInsertId();
     }
 
     public function updateFromRequest(Request $request)

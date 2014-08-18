@@ -58,11 +58,11 @@ $().ready(function() {
     });
 
     $('.ingredient-edit').on('click', function() {
-        var id = $(this).data('id')
+        var id = $(this).data('id');
 
         $.ajax({
             url: '/ingredients/' + id,
-            type: 'GET',
+            type: 'GET'
         }).done(function(response) {
             console.log(response);
             var $modal = $('#ingredient-add-modal');
@@ -74,7 +74,7 @@ $().ready(function() {
                 if ($.type(response[key]) !== 'undefined') {
                     $(this).val(response[key]);
                 }
-            })
+            });
             $modal.modal('show');
         });
     });

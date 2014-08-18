@@ -6,7 +6,7 @@ require_once '../vendor/autoload.php';
 use Slim\Slim;
 use Slim\Route;
 use Recipes\Ingredient;
-use Recipes\Recipe;
+use Recipes\RecipeTable;
 use Recipes\RecipeIngredient;
 
 
@@ -72,28 +72,29 @@ $app->hook('slim.after.dispatch', function() use ($app) {
 
 // ------- RECIPES -------
 $app->get('/', function() use ($app, $oDB) {
-    $oRecipe = new Recipe($oDB);
-    $recipes = $oRecipe->getAll();
+    $oRecipeTable = new RecipeTable($oDB);
+    $recipes = $oRecipeTable->getAll();
     $app->render('recipes.php', ['recipes' => $recipes]);
 });
 
 $app->get('/recipe', function() use ($app, $oDB) {
     $recipe = new stdClass();
     $recipeIngredients = [];
-    $ingredients = [];
+    $oIngredient = new Ingredient($oDB);
+    $ingredients = $oIngredient->getAll();
 
     $app->render('recipe.php', ['recipe' => $recipe, 'ingredients' => $ingredients, 'recipeIngredients' => $recipeIngredients]);
 });
 
 $app->post('/recipe', function() use ($app, $oDB) {
-    $oRecipe = new Recipe($oDB);
-    $id = $oRecipe->addFromRequest($app->request);
+    $oRecipeTable = new RecipeTable($oDB);
+    $id = $oRecipeTable->addFromRequest($app->request);
     $app->redirect('/recipe/' . $id);
 });
 
 $app->get('/recipe/:id', function($id) use ($app, $oDB) {
-    $oRecipe = new Recipe($oDB);
-    $recipe = $oRecipe->get($id);
+    $oRecipeTable = new RecipeTable($oDB);
+    $recipe = $oRecipeTable->get($id);
     $oRecipeIngredient = new RecipeIngredient($oDB);
     $recipeIngredients = $oRecipeIngredient->getByRecipeId($recipe->id);
     $oIngredient = new Ingredient($oDB);
@@ -103,17 +104,19 @@ $app->get('/recipe/:id', function($id) use ($app, $oDB) {
 });
 
 $app->put('/recipe/:id', function($id) use ($app, $oDB) {
-    $oRecipe = new Recipe($oDB);
-    $oRecipe->updateFromRequest($app->request);
+    $oRecipeTable = new RecipeTable($oDB);
+    $oRecipeTable->updateFromRequest($app->request);
     $app->redirect('/recipe/' . $id);
 });
 
 // ------- RECIPE INGREDIENTS -------
 $app->post('/recipeIngredients', function() use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
-    $oRecipeIngredient->addFromRequest($app->request);
+    $id = $oRecipeIngredient->addFromRequest($app->request);
 
     $app->response->setStatus(201);
+    $app->response->headers->set('Content-Type', "application/json");
+    $app->response->setBody(json_encode(['id' => $id]));
 });
 
 $app->put('/recipeIngredients/:id', function() use ($app, $oDB) {

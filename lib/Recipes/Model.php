@@ -5,7 +5,6 @@ namespace Recipes;
 use Slim\Http\Request;
 use Recipes\Exception\MissingTableNameException;
 
-
 abstract class Model
 {
     protected $oDB;
