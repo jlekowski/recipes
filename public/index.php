@@ -1,5 +1,6 @@
 <?php
 
+require_once '../config/config.php';
 require_once '../vendor/autoload.php';
 
 use Slim\Slim;
@@ -20,10 +21,10 @@ $app = new Slim(array(
     ''
 ));
 
+// @todo: maybe have it in a hook and set to app?
+$oDB = new PDO('sqlite:' . SQLITE_FILE);
+
 //$app->setName('recipes');
-//$app->get('/foo', function () use ($app) {
-//    $app->render('foo.php'); // <-- SUCCESS
-//});
 
 //// Only invoked if mode is "production"
 //$app->configureMode('production', function () use ($app) {
@@ -46,8 +47,6 @@ $app = new Slim(array(
 //});
 
 //$app->get('/recipe/:id', function($id) use ($app) {
-////    echo "Recipe: $id";
-////    echo "<br>";
 ////    $app->flash('error', 'Login required');
 //    $app->render('recipe_details.php', ['id' => $id, 'url' => $app->urlFor('recipe2', ['id' => $id])]);
 //})->name('recipe2');
@@ -72,14 +71,13 @@ $app->hook('slim.after.dispatch', function() use ($app) {
 });
 
 // ------- RECIPES -------
-$app->get('/', function() use ($app) {
-    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+$app->get('/', function() use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $recipes = $oRecipe->getAll();
     $app->render('recipes.php', ['recipes' => $recipes]);
 });
 
-$app->get('/recipe', function() use ($app) {
+$app->get('/recipe', function() use ($app, $oDB) {
     $recipe = new stdClass();
     $recipeIngredients = [];
     $ingredients = [];
@@ -87,15 +85,13 @@ $app->get('/recipe', function() use ($app) {
     $app->render('recipe.php', ['recipe' => $recipe, 'ingredients' => $ingredients, 'recipeIngredients' => $recipeIngredients]);
 });
 
-$app->post('/recipe', function() use ($app) {
-    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+$app->post('/recipe', function() use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $id = $oRecipe->addFromRequest($app->request);
     $app->redirect('/recipe/' . $id);
 });
 
-$app->get('/recipe/:id', function($id) use ($app) {
-    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+$app->get('/recipe/:id', function($id) use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $recipe = $oRecipe->get($id);
     $oRecipeIngredient = new RecipeIngredient($oDB);
@@ -106,32 +102,28 @@ $app->get('/recipe/:id', function($id) use ($app) {
     $app->render('recipe.php', ['recipe' => $recipe, 'ingredients' => $ingredients, 'recipeIngredients' => $recipeIngredients]);
 });
 
-$app->put('/recipe/:id', function($id) use ($app) {
-    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+$app->put('/recipe/:id', function($id) use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $oRecipe->updateFromRequest($app->request);
     $app->redirect('/recipe/' . $id);
 });
 
 // ------- RECIPE INGREDIENTS -------
-$app->post('/recipeIngredients', function() use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->post('/recipeIngredients', function() use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
     $oRecipeIngredient->addFromRequest($app->request);
 
     $app->response->setStatus(201);
 });
 
-$app->put('/recipeIngredients/:id', function($id) use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->put('/recipeIngredients/:id', function() use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
     $oRecipeIngredient->updateFromRequest($app->request);
 
     $app->response->setStatus(201);
 });
 
-$app->get('/recipeIngredients/:id', function($id) use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->get('/recipeIngredients/:id', function($id) use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
     $row = $oRecipeIngredient->get($id);
 
@@ -140,8 +132,7 @@ $app->get('/recipeIngredients/:id', function($id) use ($app) {
     $app->response->setBody(json_encode($row));
 });
 
-$app->delete('/recipeIngredients/:id', function($id) use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->delete('/recipeIngredients/:id', function($id) use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
     $oRecipeIngredient->delete($id);
 
@@ -149,15 +140,13 @@ $app->delete('/recipeIngredients/:id', function($id) use ($app) {
 });
 
 // ------- INGREDIENTS -------
-$app->get('/ingredients', function() use ($app) {
-    $oDB = new PDO("sqlite:../db/recipes.sqlite");
+$app->get('/ingredients', function() use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
     $ingredients = $oIngredient->getAll();
     $app->render('ingredients.php', ['ingredients' => $ingredients]);
 });
 
-$app->get('/ingredients/:id', function($id) use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->get('/ingredients/:id', function($id) use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
     $row = $oIngredient->get($id);
 
@@ -166,24 +155,21 @@ $app->get('/ingredients/:id', function($id) use ($app) {
     $app->response->setBody(json_encode($row));
 });
 
-$app->post('/ingredients', function() use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->post('/ingredients', function() use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
     $oIngredient->addFromRequest($app->request);
 
     $app->response->setStatus(201);
 });
 
-$app->put('/ingredients/:id', function($id) use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->put('/ingredients/:id', function() use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
     $oIngredient->updateFromRequest($app->request);
 
     $app->response->setStatus(201);
 });
 
-$app->delete('/ingredients/:id', function($id) use ($app) {
-    $oDB = new \PDO("sqlite:../db/recipes.sqlite");
+$app->delete('/ingredients/:id', function($id) use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
     $oIngredient->delete($id);
 
