@@ -2,6 +2,8 @@
 
 namespace Recipes;
 
+use Slim\Http\Request;
+
 class Recipe
 {
     protected $oDB;
@@ -11,7 +13,7 @@ class Recipe
         $this->oDB = $oDB;
     }
 
-    public function addFromRequest(\Slim\Http\Request $request)
+    public function addFromRequest(Request $request)
     {
         $stm = $this->oDB->prepare("INSERT INTO recipe VALUES (NULL, ?, ?)");
         $stm->execute([$request->post('name'), $request->post('description')]);
@@ -19,7 +21,7 @@ class Recipe
         return $this->oDB->lastInsertId();
     }
 
-    public function updateFromRequest(\Slim\Http\Request $request)
+    public function updateFromRequest(Request $request)
     {
         $stm = $this->oDB->prepare("UPDATE recipe SET name = ?, description = ? WHERE id = ?");
         $stm->execute([$request->put('name'), $request->put('description'), $request->put('id')]);

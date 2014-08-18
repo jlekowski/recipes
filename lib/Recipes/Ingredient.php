@@ -2,6 +2,8 @@
 
 namespace Recipes;
 
+use Slim\Http\Request;
+
 class Ingredient
 {
     protected $oDB;
@@ -11,13 +13,13 @@ class Ingredient
         $this->oDB = $oDB;
     }
 
-    public function addFromRequest(\Slim\Http\Request $request)
+    public function addFromRequest(Request $request)
     {
         $stm = $this->oDB->prepare("INSERT INTO ingredient VALUES (NULL, ?, ?, ?, ?, ?)");
         $stm->execute([$request->post('name'), $request->post('kcal'), $request->post('protein'), $request->post('fat'), $request->post('carb')]);
     }
 
-    public function updateFromRequest(\Slim\Http\Request $request)
+    public function updateFromRequest(Request $request)
     {
         $stm = $this->oDB->prepare("UPDATE ingredient SET name = ?, kcal = ?, protein = ?, fat = ?, carb = ? WHERE id = ?");
         $stm->execute([$request->put('name'), $request->put('kcal'), $request->put('protein'), $request->put('fat'), $request->put('carb'), $request->put('id')]);
