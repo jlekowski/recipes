@@ -12,8 +12,18 @@
     <!--<link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">-->
 <!--    @import url("//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css")-->
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
+
+    <!-- JS -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular-route.min.js"></script>
+
+    <!-- ANGULAR CUSTOM -->
+    <script src="js/controllers/TestCtrl.js"></script>
+    <script src="js/services/TestService.js"></script>
+    <script src="js/appRoutes.js"></script>
+    <script src="js/app.js"></script>
 </head>
-<body>
+<body ng-app="recipes" ng-controller="TestController">
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -67,3 +77,4 @@
         </div><!-- /.navbar-collapse -->
     </div><!-- /.container-fluid -->
 </nav>
+<div ng-view>ng-view</div>
