@@ -1,5 +1,7 @@
-angular.module('TestCtrl', []).controller('TestController', function($scope) {
-//alert('ok')
-	$scope.testMsg = 'To the moon and back!';
+angular.module('TestCtrl', []).controller('TestController', function($scope, $routeParams, Test) {
+    Test.get().success(function(response) {
+        $scope.recipes = response;
+    });
 
+    console.log($routeParams.id);
 });

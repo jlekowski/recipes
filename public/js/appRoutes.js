@@ -1,4 +1,4 @@
-angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', function($routeProvider, $locationProvider) {
+angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '$httpProvider', function($routeProvider, $locationProvider, $httpProvider) {
 
 	$routeProvider
 		// home page
@@ -14,9 +14,14 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', f
 //		})
 		//
 		.when('/', {
-			templateUrl: 'views/test.html',
+			templateUrl: '/views/test.html',
 			controller: 'TestController'
-		});
+		}).when('/recipe/:id', {
+            templateUrl: '/views/test2.html',
+            controller: 'TestController'
+        });
 
 	$locationProvider.html5Mode(true);
+
+    $httpProvider.defaults.headers.common["X-Requested-With"] = 'XMLHttpRequest';
 }]);

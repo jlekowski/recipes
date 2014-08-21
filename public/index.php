@@ -74,7 +74,16 @@ $app->hook('slim.after.dispatch', function() use ($app) {
 $app->get('/', function() use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $recipes = $oRecipe->getAll();
-    $app->render('recipes.php', ['recipes' => $recipes]);
+//    $app->render('recipes.php', ['recipes' => $recipes]);
+});
+
+$app->get('/recipes', function() use ($app, $oDB) {
+    $oRecipe = new Recipe($oDB);
+    $recipes = $oRecipe->getAll();
+
+    $app->response->setStatus(200);
+    $app->response->headers->set('Content-Type', "application/json");
+    $app->response->setBody(json_encode($recipes));
 });
 
 $app->get('/recipe', function() use ($app, $oDB) {
