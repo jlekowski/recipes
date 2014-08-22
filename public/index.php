@@ -100,15 +100,25 @@ $app->post('/recipe', function() use ($app, $oDB) {
     $app->redirect('/recipe/' . $id);
 });
 
-$app->get('/recipe/:id', function($id) use ($app, $oDB) {
+$app->get('/recipes/:id', function($id) use ($app, $oDB) {
+    if (!$app->request->isAjax()) {
+        return;
+    }
     $oRecipe = new Recipe($oDB);
     $recipe = $oRecipe->get($id);
-    $oRecipeIngredient = new RecipeIngredient($oDB);
-    $recipeIngredients = $oRecipeIngredient->getByRecipeId($recipe->id);
-    $oIngredient = new Ingredient($oDB);
-    $ingredients = $oIngredient->getAll();
 
-    $app->render('recipe.php', ['recipe' => $recipe, 'ingredients' => $ingredients, 'recipeIngredients' => $recipeIngredients]);
+    $app->response->setStatus(200);
+    $app->response->headers->set('Content-Type', "application/json");
+    $app->response->setBody(json_encode($recipe));
+});
+
+$app->get('/recipes/:id/ingredients', function($id) use ($app, $oDB) {
+    $oRecipeIngredient = new RecipeIngredient($oDB);
+    $recipeIngredients = $oRecipeIngredient->getByRecipeId($id);
+
+    $app->response->setStatus(200);
+    $app->response->headers->set('Content-Type', "application/json");
+    $app->response->setBody(json_encode($recipeIngredients));
 });
 
 $app->put('/recipe/:id', function($id) use ($app, $oDB) {

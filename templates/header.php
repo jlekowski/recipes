@@ -18,12 +18,15 @@
     <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.20/angular-route.min.js"></script>
 
     <!-- ANGULAR CUSTOM -->
-    <script src="js/controllers/TestCtrl.js"></script>
-    <script src="js/services/TestService.js"></script>
-    <script src="js/appRoutes.js"></script>
-    <script src="js/app.js"></script>
+    <script src="/js/controllers/MainCtrl.js"></script>
+    <script src="/js/controllers/RecipesCtrl.js"></script>
+    <script src="/js/services/RecipesService.js"></script>
+    <script src="/js/controllers/RecipeCtrl.js"></script>
+    <script src="/js/services/RecipeService.js"></script>
+    <script src="/js/appRoutes.js"></script>
+    <script src="/js/app.js"></script>
 </head>
-<body ng-app="recipes" ng-controller="TestController">
+<body ng-app="recipes" ng-controller="MainController">
 <nav class="navbar navbar-default" role="navigation">
     <div class="container">
         <!-- Brand and toggle get grouped for better mobile display -->
@@ -34,7 +37,7 @@
                 <span class="glyphiconicon-bar"></span>
                 <span class="glyphiconicon-bar"></span>
             </button>
-            <a class="navbar-brand" href="/">Recipes</a>
+            <a class="navbar-brand" href="/" ng-bind="appName">Recipes</a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

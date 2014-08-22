@@ -41,14 +41,14 @@ class RecipeIngredient
 
     public function getAll()
     {
-        $stm = $this->oDB->query("SELECT * FROM recipe_ingredient ORDER BY name");
+        $stm = $this->oDB->query("SELECT * FROM recipe_ingredient");
 
         return $stm->fetchall(\PDO::FETCH_OBJ);
     }
 
     public function getByRecipeId($recipeId)
     {
-        $stm = $this->oDB->query("SELECT i.*, ri.* FROM recipe_ingredient AS ri JOIN ingredient AS i ON ri.ingredient_id = i.id WHERE ri.recipe_id = ? ORDER BY name");
+        $stm = $this->oDB->query("SELECT i.*, ri.* FROM recipe_ingredient AS ri JOIN ingredient AS i ON ri.ingredient_id = i.id WHERE ri.recipe_id = ?");
         $stm->execute([$recipeId]);
 
         return $stm->fetchall(\PDO::FETCH_OBJ);
