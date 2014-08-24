@@ -15,16 +15,18 @@ class Recipe
 
     public function addFromRequest(Request $request)
     {
+        $body = json_decode($request->getBody());
         $stm = $this->oDB->prepare("INSERT INTO recipe VALUES (NULL, ?, ?)");
-        $stm->execute([$request->post('name'), $request->post('description')]);
+        $stm->execute([$body->name, $body->description]);
 
         return $this->oDB->lastInsertId();
     }
 
     public function updateFromRequest(Request $request)
     {
+        $body = json_decode($request->getBody());
         $stm = $this->oDB->prepare("UPDATE recipe SET name = ?, description = ? WHERE id = ?");
-        $stm->execute([$request->put('name'), $request->put('description'), $request->put('id')]);
+        $stm->execute([$body->name, $body->description, $body->id]);
     }
 
     public function delete($id)

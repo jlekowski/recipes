@@ -8,24 +8,23 @@
             <div class="form-group row">
                 <label for="recipe-name" class="col-lg-1 control-label">Name</label>
                 <div class="col-lg-4">
-                    <input type="text" class="form-control" id="recipe-name" name="name" value="{{recipe.name}}">
+                    <input type="text" class="form-control" id="recipe-name" name="name" ng-model="recipe.name" />
                 </div>
             </div>
             <div class="form-group row">
                 <label for="recipe-description" class="col-lg-1 control-label">Description</label>
                 <div class="col-lg-4">
-                    <textarea class="form-control" id="recipe-description" name="description" rows="5">{{recipe.description}}</textarea>
+                    <textarea class="form-control" id="recipe-description" name="description" rows="5" ng-model="recipe.description"></textarea>
                 </div>
             </div>
             <div class="form-group row">
-                <div class="col-lg-1"></div>
-                <div class="col-lg-4">
-                    <button type="submit" class="btn btn-sm btn-primary recipe-edit">Save changes</button>
+                <div class="col-lg-offset-1 col-lg-4">
+                    <button type="submit" class="btn btn-sm btn-primary" ng-click="save()">Save changes</button>
                 </div>
             </div>
         </fieldset>
     </form>
-    <h4>Ingredients <button type="button" class="btn btn-xs btn-success recipe-ingredient-add">+Add</button></h4>
+    <h4>Ingredients <button type="button" class="btn btn-xs btn-success" ng-click="addRecipeIngredient()">+Add</button></h4>
     <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -39,7 +38,7 @@
         </tr>
         </thead>
         <tbody>
-        <tr class="recipe-ingredient-edit" ng-repeat="recipeIngredient in recipeIngredients">
+        <tr ng-click="addRecipeIngredient(recipeIngredient)" ng-repeat="recipeIngredient in recipeIngredients">
             <td><a href="/ingredient/{{recipeIngredient.id}}">{{recipeIngredient.name}}</a></td>
             <td>{{recipeIngredient.weight}}</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'kcal')}} ({{recipeIngredient.kcal}})</td>
@@ -84,23 +83,19 @@
             </div>
             <div class="modal-body">
                 <form class="form-horizontal">
-                    <input type="hidden" id="recipe-ingredient-id" name="id" value="" />
-                    <input type="hidden" name="recipe_id" value="<?=$recipe->id?>" />
                     <fieldset>
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-id" class="col-lg-2 control-label small">Ingredient</label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="recipe-ingredient-id" name="ingredient_id">
-                                    <?php foreach ($ingredients as $ingredient): ?>
-                                    <option value="<?=$ingredient->id?>"><?=$ingredient->name?></option>
-                                    <?php endforeach; ?>
+                                <select class="form-control" id="recipe-ingredient-id" ng-model="recipeIngredient.ingredient_id">
+                                    <option value="{{ingredient.id}}" ng-repeat="ingredient in ingredients">{{ingredient.name}}</option>
                                 </select>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-weight" class="col-lg-2 control-label small">Weight</label>
                             <div class="col-lg-6">
-                                <input type="text" class="form-control" id="recipe-ingredient-weight" name="weight" placeholder="weight">
+                                <input type="text" class="form-control" placeholder="weight" ng-model="recipeIngredient.weight" />
                             </div>
                         </div>
                     </fieldset>
@@ -108,7 +103,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-primary" id="recipe-ingredient-add-submit">Save changes</button>
+                <button type="button" class="btn btn-sm btn-primary" ng-click="saveRecipeIngredient()">Save changes</button>
             </div>
         </div>
     </div>
@@ -125,7 +120,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-sm btn-danger" id="recipe-ingredient-delete-submit">Delete</button>
+                <button type="button" class="btn btn-sm btn-danger" ng-click="deleteRecipeIngredient()">Delete</button>
             </div>
         </div>
     </div>

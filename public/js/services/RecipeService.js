@@ -1,23 +1,23 @@
 angular.module('RecipeService', []).factory('Recipe', ['$http', function($http) {
-
     return {
-        get : function(id) {
+        get: function(id) {
             return $http.get('/recipes/' + id);
         },
 
-        getIngredients : function(id) {
+        getIngredients: function(id) {
             return $http.get('/recipes/' + id + '/ingredients');
         },
 
-        // call to POST and create a new geek
-        create : function(data) {
-            return $http.post('/recipe', data);
+        edit: function(data) {
+            return $http.put('/recipes/' + data.id, data);
         },
 
-        // call to DELETE a geek
-        delete : function(id) {
-            return $http.delete('/recipe/' + id);
-        }
-    }
+        add: function(data) {
+            return $http.post('/recipes', data);
+        },
 
+        delete: function(id) {
+            return $http.delete('/recipes/' + id);
+        }
+    };
 }]);

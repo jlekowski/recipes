@@ -71,11 +71,7 @@ $app->hook('slim.after.dispatch', function() use ($app) {
 });
 
 // ------- RECIPES -------
-$app->get('/', function() use ($app, $oDB) {
-    $oRecipe = new Recipe($oDB);
-    $recipes = $oRecipe->getAll();
-//    $app->render('recipes.php', ['recipes' => $recipes]);
-});
+$app->get('/', function() {});
 
 $app->get('/recipes', function() use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
@@ -86,18 +82,14 @@ $app->get('/recipes', function() use ($app, $oDB) {
     $app->response->setBody(json_encode($recipes));
 });
 
-$app->get('/recipe', function() use ($app, $oDB) {
-    $recipe = new stdClass();
-    $recipeIngredients = [];
-    $ingredients = [];
+$app->get('/recipe', function() {});
 
-    $app->render('recipe.php', ['recipe' => $recipe, 'ingredients' => $ingredients, 'recipeIngredients' => $recipeIngredients]);
-});
-
-$app->post('/recipe', function() use ($app, $oDB) {
+$app->post('/recipes', function() use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $id = $oRecipe->addFromRequest($app->request);
-    $app->redirect('/recipe/' . $id);
+
+    $app->response->setStatus(201);
+    $app->response->headers->set('Location', '/recipes/' . $id);
 });
 
 $app->get('/recipes/:id', function($id) use ($app, $oDB) {
@@ -121,34 +113,36 @@ $app->get('/recipes/:id/ingredients', function($id) use ($app, $oDB) {
     $app->response->setBody(json_encode($recipeIngredients));
 });
 
-$app->put('/recipe/:id', function($id) use ($app, $oDB) {
+$app->put('/recipes/:id', function() use ($app, $oDB) {
     $oRecipe = new Recipe($oDB);
     $oRecipe->updateFromRequest($app->request);
-    $app->redirect('/recipe/' . $id);
+
+    $app->response->setStatus(204);
 });
 
 // ------- RECIPE INGREDIENTS -------
 $app->post('/recipeIngredients', function() use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
-    $oRecipeIngredient->addFromRequest($app->request);
+    $id = $oRecipeIngredient->addFromRequest($app->request);
 
     $app->response->setStatus(201);
+    $app->redirect('/recipeIngredients/' . $id);
 });
 
 $app->put('/recipeIngredients/:id', function() use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
     $oRecipeIngredient->updateFromRequest($app->request);
 
-    $app->response->setStatus(201);
+    $app->response->setStatus(204);
 });
 
 $app->get('/recipeIngredients/:id', function($id) use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);
-    $row = $oRecipeIngredient->get($id);
+    $recipeIngredient = $oRecipeIngredient->get($id);
 
     $app->response->setStatus(200);
     $app->response->headers->set('Content-Type', "application/json");
-    $app->response->setBody(json_encode($row));
+    $app->response->setBody(json_encode($recipeIngredient));
 });
 
 $app->delete('/recipeIngredients/:id', function($id) use ($app, $oDB) {
@@ -160,32 +154,39 @@ $app->delete('/recipeIngredients/:id', function($id) use ($app, $oDB) {
 
 // ------- INGREDIENTS -------
 $app->get('/ingredients', function() use ($app, $oDB) {
+    if (!$app->request->isAjax()) {
+        return;
+    }
     $oIngredient = new Ingredient($oDB);
     $ingredients = $oIngredient->getAll();
-    $app->render('ingredients.php', ['ingredients' => $ingredients]);
+
+    $app->response->setStatus(200);
+    $app->response->headers->set('Content-Type', "application/json");
+    $app->response->setBody(json_encode($ingredients));
 });
 
 $app->get('/ingredients/:id', function($id) use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
-    $row = $oIngredient->get($id);
+    $ingredient = $oIngredient->get($id);
 
     $app->response->setStatus(200);
     $app->response->headers->set('Content-Type', "application/json");
-    $app->response->setBody(json_encode($row));
+    $app->response->setBody(json_encode($ingredient));
 });
 
 $app->post('/ingredients', function() use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
-    $oIngredient->addFromRequest($app->request);
+    $id = $oIngredient->addFromRequest($app->request);
 
     $app->response->setStatus(201);
+    $app->redirect('/ingredients/' . $id);
 });
 
 $app->put('/ingredients/:id', function() use ($app, $oDB) {
     $oIngredient = new Ingredient($oDB);
     $oIngredient->updateFromRequest($app->request);
 
-    $app->response->setStatus(201);
+    $app->response->setStatus(204);
 });
 
 $app->delete('/ingredients/:id', function($id) use ($app, $oDB) {

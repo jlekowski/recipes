@@ -13,7 +13,7 @@
         <tr class="recipe-row">
             <td>{{recipe.id}}</td>
             <td><a href="/recipes/{{recipe.id}}" ng-click="selectRecipe(recipe)">{{recipe.name}}</a></td>
-            <td><i class="glyphicon glyphicon-remove recipe-ingredient-delete"></i></td>
+            <td><i class="glyphicon glyphicon-remove" ng-click="deleteRecipe(recipe, $event)"></i></td>
         </tr>
         </tbody>
     </table>

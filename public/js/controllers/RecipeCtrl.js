@@ -2,7 +2,9 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
     console.info('RecipeCtrl');
 
     $scope.init = function () {
-        $scope.recipe = $rootScope.recipe ? $rootScope.recipe : {};
+        if (!$scope.recipe) {
+            $scope.recipe = $rootScope.recipe ? $rootScope.recipe : {};
+        }
 
         if (typeof $scope.recipe.id === 'undefined' && $routeParams.id) {
             $scope.recipe.id = $routeParams.id;
@@ -18,6 +20,8 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
                 $scope.calculateIngredientTotals();
             });
         }
+
+        $scope.ingredients = [{id: 1, name: "number1"}, {id: 2, name: "number2"}];
     };
 
     $scope.getIngredientValueForWeight = function(recipeIngredient, value) {
@@ -51,8 +55,34 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
         }
     };
 
-    console.log('$routeParams.id: ' + $routeParams.id);
-//    console.log($rootScope.recipe);
+    $scope.save = function() {
+        if ($scope.recipe.id) {
+            Recipe.edit($scope.recipe).success(function() {
+                console.info('edited');
+            });
+        } else {
+            Recipe.add($scope.recipe).success(function(data, status, headers, config) {
+                console.info('added');
+                $scope.recipe.id = Number(headers('Location').match(/\d+$/)[0]);
+            });
+        }
+    };
+
+    $scope.addRecipeIngredient = function(recipeIngredient) {
+        $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Add recipe ingredient');
+        if (recipeIngredient) {
+            $scope.recipeIngredient = recipeIngredient;
+            console.info(recipeIngredient);
+        }
+    };
+
+    $scope.saveRecipeIngredient = function() {
+        console.info($scope.recipeIngredient);
+    };
+
+    $scope.deleteRecipeIngredient = function() {
+        console.info($scope.recipeIngredient.id);
+    };
 
     $scope.init();
 });
