@@ -1,27 +1,30 @@
-angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $routeParams, $rootScope, Recipe) {
+angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $routeParams, $rootScope, Recipe, Ingredient) {
     console.info('RecipeCtrl');
 
     $scope.init = function () {
         if (!$scope.recipe) {
-            $scope.recipe = $rootScope.recipe ? $rootScope.recipe : {};
-        }
+            $scope.recipe = {id: $routeParams.id};
 
-        if (typeof $scope.recipe.id === 'undefined' && $routeParams.id) {
-            $scope.recipe.id = $routeParams.id;
+            if (typeof $scope.recipe.id !== 'undefined') {
+                Recipe.get($scope.recipe.id).success(function(response) {
+                    $scope.recipe = response;
+                });
+            }
         }
 
         if (typeof $scope.recipe.id !== 'undefined') {
-            Recipe.get($scope.recipe.id).success(function(response) {
-                $scope.recipe = response;
-            });
-
+            // @todo Don't need to load if $rootScope.recipeIngredients[0].recipe_id === $scope.recipe.id
             Recipe.getIngredients($scope.recipe.id).success(function(response) {
-                $scope.recipeIngredients = response;
+                $rootScope.recipeIngredients = response;
                 $scope.calculateIngredientTotals();
             });
         }
 
-        $scope.ingredients = [{id: 1, name: "number1"}, {id: 2, name: "number2"}];
+        if (!$scope.ingredients) {
+            Ingredient.getAll().success(function(response) {
+                $rootScope.ingredients = response;
+            });
+        }
     };
 
     $scope.getIngredientValueForWeight = function(recipeIngredient, value) {
@@ -69,14 +72,20 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
     };
 
     $scope.addRecipeIngredient = function(recipeIngredient) {
-        $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Add recipe ingredient');
+        $scope.recipeIngredient = recipeIngredient;
         if (recipeIngredient) {
-            $scope.recipeIngredient = recipeIngredient;
-            console.info(recipeIngredient);
+            $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Edit recipe ingredient');
+        } else {
+            $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Add recipe ingredient');
         }
     };
 
     $scope.saveRecipeIngredient = function() {
+        if (typeof $scope.recipeIngredient.id === 'undefined') {
+            RecipeIngredient.edit($scope.recipeIngredient);
+        } else {
+            RecipeIngredient.add($scope.recipeIngredient);
+        }
         console.info($scope.recipeIngredient);
     };
 

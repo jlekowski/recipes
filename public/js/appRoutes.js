@@ -16,7 +16,7 @@ angular.module('appRoutes', []).config(['$routeProvider', '$locationProvider', '
         .when('/', {
             templateUrl: '/views/recipes.html',
             controller: 'RecipesController'
-        }).when('/recipes/:id', {
+        }).when('/recipes/:id|/recipe', {
             templateUrl: '/views/recipe.html',
             controller: 'RecipeController'
         });
