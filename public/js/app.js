@@ -1,1 +1,11 @@
-angular.module('recipes', ['ngRoute', 'appRoutes', 'MainCtrl', 'RecipesCtrl', 'RecipesService', 'RecipeCtrl', 'RecipeService', 'IngredientService']);
+angular.module('recipes', [
+    'ngRoute',
+    'appRoutes',
+    'MainCtrl',
+    'RecipesCtrl',
+    'RecipesService',
+    'RecipeCtrl',
+    'RecipeService',
+    'IngredientService',
+    'RecipeIngredientService'
+]);

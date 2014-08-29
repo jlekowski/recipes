@@ -1,4 +1,4 @@
-angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $routeParams, $rootScope, Recipe, Ingredient) {
+angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $routeParams, $rootScope, Recipe, Ingredient, RecipeIngredient) {
     console.info('RecipeCtrl');
 
     $scope.init = function () {
@@ -40,6 +40,8 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
                 totals[j] += (j === 'weight')
                     ? Number(recipeIngredient[j])
                     : $scope.getIngredientValueForWeight(recipeIngredient, j);
+                // @todo check if angular could round numbers
+                totals[j] = Math.round(totals[j] * 100) / 100; // JS strange roundings
             }
         }
 
@@ -72,19 +74,33 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
     };
 
     $scope.addRecipeIngredient = function(recipeIngredient) {
-        $scope.recipeIngredient = recipeIngredient;
+        // @todo Modal title in the view
         if (recipeIngredient) {
+            $scope.recipeIngredient = recipeIngredient;
             $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Edit recipe ingredient');
         } else {
+            $scope.recipeIngredient = {recipe_id: $scope.recipe.id};
             $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Add recipe ingredient');
         }
     };
 
     $scope.saveRecipeIngredient = function() {
         if (typeof $scope.recipeIngredient.id === 'undefined') {
-            RecipeIngredient.edit($scope.recipeIngredient);
+            RecipeIngredient.add($scope.recipeIngredient).success(function(data, status, headers) {
+                var recipeIngredient = {}, i;
+                $scope.recipeIngredient.id = Number(headers('Location').match(/\d+$/)[0]);
+
+                for (i in $scope.ingredients) {
+                    if ($scope.ingredients[i].id === $scope.recipeIngredient.ingredient_id) {
+                        recipeIngredient = $.extend($scope.ingredients[i], $scope.recipeIngredient);
+                        break;
+                    }
+                }
+                $rootScope.recipeIngredients.push(recipeIngredient);
+                $('#recipe-ingredient-add-modal').modal('hide');
+            });
         } else {
-            RecipeIngredient.add($scope.recipeIngredient);
+//            RecipeIngredient.edit($scope.recipeIngredient);
         }
         console.info($scope.recipeIngredient);
     };

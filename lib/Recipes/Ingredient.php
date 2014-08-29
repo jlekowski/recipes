@@ -15,14 +15,18 @@ class Ingredient
 
     public function addFromRequest(Request $request)
     {
+        $body = json_decode($request->getBody());
         $stm = $this->oDB->prepare("INSERT INTO ingredient VALUES (NULL, ?, ?, ?, ?, ?)");
-        $stm->execute([$request->post('name'), $request->post('kcal'), $request->post('protein'), $request->post('fat'), $request->post('carb')]);
+        $stm->execute([$body->name, $body->kcal, $body->protein, $body->fat, $body->carb]);
+
+        return $this->oDB->lastInsertId();
     }
 
     public function updateFromRequest(Request $request)
     {
+        $body = json_decode($request->getBody());
         $stm = $this->oDB->prepare("UPDATE ingredient SET name = ?, kcal = ?, protein = ?, fat = ?, carb = ? WHERE id = ?");
-        $stm->execute([$request->put('name'), $request->put('kcal'), $request->put('protein'), $request->put('fat'), $request->put('carb'), $request->put('id')]);
+        $stm->execute([$body->name, $body->kcal, $body->protein, $body->fat, $body->carb, $body->id]);
     }
 
     public function delete($id)

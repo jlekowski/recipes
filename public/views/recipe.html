@@ -38,7 +38,7 @@
         </thead>
         <tbody>
         <tr ng-click="addRecipeIngredient(recipeIngredient)" ng-repeat="recipeIngredient in recipeIngredients">
-            <td><a href="/ingredient/{{recipeIngredient.id}}">{{recipeIngredient.name}}</a></td>
+            <td>{{recipeIngredient.name}}</td>
             <td>{{recipeIngredient.weight}}</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'kcal')}} ({{recipeIngredient.kcal}})</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'protein')}} ({{recipeIngredient.protein}})</td>
@@ -86,15 +86,14 @@
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-id" class="col-lg-2 control-label small">Ingredient</label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="recipe-ingredient-id" ng-model="recipeIngredient.ingredient_id">
-                                    <option value="{{ingredient.id}}" ng-repeat="ingredient in ingredients">{{ingredient.name}}</option>
-                                </select>
+                                <select class="form-control" id="recipe-ingredient-id" ng-model="recipeIngredient.ingredient_id"
+                                        ng-options="ingredient.id as ingredient.name for ingredient in ingredients"></select>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-weight" class="col-lg-2 control-label small">Weight</label>
                             <div class="col-lg-6">
-                                <input type="text" class="form-control" placeholder="weight" ng-model="recipeIngredient.weight" />
+                                <input type="text" class="form-control" id="recipe-ingredient-weight" placeholder="weight" ng-model="recipeIngredient.weight" />
                             </div>
                         </div>
                     </fieldset>

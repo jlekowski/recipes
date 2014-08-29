@@ -24,6 +24,7 @@
     <script src="/js/controllers/RecipeCtrl.js"></script>
     <script src="/js/services/RecipeService.js"></script>
     <script src="/js/services/IngredientService.js"></script>
+    <script src="/js/services/RecipeIngredientService.js"></script>
     <script src="/js/appRoutes.js"></script>
     <script src="/js/app.js"></script>
 </head>
