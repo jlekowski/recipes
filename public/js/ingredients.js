@@ -3,6 +3,10 @@
  */
 
 $().ready(function() {
+    $('#ingredient-add-modal').on('shown.bs.modal', function() {
+        $(':text:first', this).focus();
+    });
+
     $('.ingredient-add').on('click', function() {
         $('#ingredient-add-modal').modal('show').find('.modal-title').text('Add ingredient');
     });
