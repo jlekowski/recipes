@@ -12,8 +12,8 @@ angular.module('RecipeIngredientService', []).factory('RecipeIngredient', ['$htt
             return $http.post('/recipes/' + data.recipe_id + '/ingredients', data);
         },
 
-        delete: function(recipe_id, id) {
-            return $http.delete('/recipes/' + recipe_id + '/ingredients/' + id);
+        delete: function(recipeIngredient) {
+            return $http.delete('/recipes/' + recipeIngredient.recipe_id + '/ingredients/' + recipeIngredient.id);
         }
     };
 }]);

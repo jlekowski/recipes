@@ -23,6 +23,7 @@ $app = new Slim(array(
 
 // @todo: maybe have it in a hook and set to app?
 $oDB = new PDO('sqlite:' . SQLITE_FILE);
+$oDB->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
 //$stm = $oDB->prepare("SELECT * FROM recipe WHERE id = ?");
 //$stm->setFetchMode(\PDO::FETCH_LAZY);

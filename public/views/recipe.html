@@ -23,7 +23,9 @@
             </div>
         </fieldset>
     </form>
-    <h4>Ingredients <button type="button" class="btn btn-xs btn-success" ng-click="addRecipeIngredient()">+Add</button></h4>
+    <h4>Ingredients
+        <button type="button" class="btn btn-xs btn-success" ng-click="addRecipeIngredient()" ng-disabled="!recipe.id">+Add</button>
+    </h4>
     <table class="table table-striped table-hover">
         <thead>
         <tr>
@@ -37,14 +39,14 @@
         </tr>
         </thead>
         <tbody>
-        <tr ng-click="addRecipeIngredient(recipeIngredient)" ng-repeat="recipeIngredient in recipeIngredients">
-            <td>{{recipeIngredient.name}}</td>
+        <tr ng-repeat="recipeIngredient in recipeIngredients">
+            <td><a ng-click="addRecipeIngredient(recipeIngredient)">{{recipeIngredient.name}}</td>
             <td>{{recipeIngredient.weight}}</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'kcal')}} ({{recipeIngredient.kcal}})</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'protein')}} ({{recipeIngredient.protein}})</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'fat')}} ({{recipeIngredient.fat}})</td>
             <td>{{getIngredientValueForWeight(recipeIngredient, 'carb')}} ({{recipeIngredient.carb}})</td>
-            <td><i class="glyphicon glyphicon-remove recipe-ingredient-delete"></i></td>
+            <td><i class="glyphicon glyphicon-remove" ng-click="confirmDeleteRecipeIngredient(recipeIngredient);"></i></td>
         </tr>
         </tbody>
         <tfoot>
@@ -86,14 +88,16 @@
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-id" class="col-lg-2 control-label small">Ingredient</label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="recipe-ingredient-id" ng-model="recipeIngredient.ingredient_id"
-                                        ng-options="ingredient.id as ingredient.name for ingredient in ingredients"></select>
+                                <select class="form-control" id="recipe-ingredient-id" ng-model="selectedIngredientId"
+                                        ng-change="ingredientSelected()"
+                                        ng-options="ingredient.name for ingredient in ingredients"></select>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-weight" class="col-lg-2 control-label small">Weight</label>
                             <div class="col-lg-6">
-                                <input type="text" class="form-control" id="recipe-ingredient-weight" placeholder="weight" ng-model="recipeIngredient.weight" />
+                                <input type="text" class="form-control" id="recipe-ingredient-weight" placeholder="weight"
+                                       ng-model="selectedRecipeIngredient.weight" ng-keyup="$event.keyCode == 13 && saveRecipeIngredient()"/>
                             </div>
                         </div>
                     </fieldset>

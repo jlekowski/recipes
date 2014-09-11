@@ -25,8 +25,8 @@ class RecipeIngredient
     public function updateFromRequest(Request $request)
     {
         $body = json_decode($request->getBody());
-        $stm = $this->oDB->prepare("UPDATE recipe_ingredient SET weight = ? WHERE id = ?");
-        $stm->execute([$body->weight, $body->id]);
+        $stm = $this->oDB->prepare("UPDATE recipe_ingredient SET weight = ?, ingredient_id = ? WHERE id = ?");
+        $stm->execute([$body->weight, $body->ingredient_id, $body->id]);
     }
 
     public function delete($id)
