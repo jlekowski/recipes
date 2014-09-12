@@ -88,16 +88,17 @@
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-id" class="col-lg-2 control-label small">Ingredient</label>
                             <div class="col-lg-6">
-                                <select class="form-control" id="recipe-ingredient-id" ng-model="selectedIngredientId"
-                                        ng-change="ingredientSelected()"
-                                        ng-options="ingredient.name for ingredient in ingredients"></select>
+                                <select class="form-control" id="recipe-ingredient-id"
+                                        ng-model="selectedRecipeIngredient.ingredient_id"
+                                        ng-options="ingredient.id as ingredient.name for ingredient in ingredients"></select>
                             </div>
                         </div>
                         <div class="form-group form-group-sm">
                             <label for="recipe-ingredient-weight" class="col-lg-2 control-label small">Weight</label>
                             <div class="col-lg-6">
                                 <input type="text" class="form-control" id="recipe-ingredient-weight" placeholder="weight"
-                                       ng-model="selectedRecipeIngredient.weight" ng-keyup="$event.keyCode == 13 && saveRecipeIngredient()"/>
+                                       ng-model="selectedRecipeIngredient.weight"
+                                       ng-keyup="$event.keyCode == 13 && saveRecipeIngredient()" />
                             </div>
                         </div>
                     </fieldset>
