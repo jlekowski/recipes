@@ -8,8 +8,8 @@
             <th></th>
         </tr>
         </thead>
-        <tbody ng-repeat="recipe in recipes | orderBy:sortColumn:sortReverse">
-        <tr class="recipe-row">
+        <tbody>
+        <tr class="recipe-row" ng-repeat="recipe in recipes | orderBy:sortColumn:sortReverse">
             <td>{{recipe.id}}</td>
             <td><a href="/recipes/{{recipe.id}}" ng-click="selectRecipe(recipe)">{{recipe.name}}</a></td>
             <td><i class="glyphicon glyphicon-remove" ng-click="deleteRecipe(recipe)"></i></td>
