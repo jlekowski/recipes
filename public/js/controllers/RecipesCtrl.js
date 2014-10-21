@@ -1,4 +1,4 @@
-angular.module('RecipesCtrl', []).controller('RecipesController', function($scope, $routeParams, $rootScope, Recipes) {
+angular.module('RecipesCtrl', []).controller('RecipesController', function($scope, $routeParams, $rootScope, Recipe, Recipes) {
     console.info('RecipesCtrl');
 
     $scope.init = function () {
@@ -16,8 +16,16 @@ angular.module('RecipesCtrl', []).controller('RecipesController', function($scop
         $rootScope.recipe = recipe;
     };
 
-    $scope.deleteRecipe = function(recipe) {
-        $scope.recipes.splice($scope.recipes.indexOf(recipe), 1);
+    $scope.deleteRecipe = function() {
+        Recipe.delete($scope.selectedRecipe.id).success(function() {
+            $scope.recipes.splice($scope.recipes.indexOf($scope.selectedRecipe), 1);
+            $('#recipe-delete-modal').modal('hide');
+        });
+    };
+
+    $scope.confirmDeleteRecipe = function(recipe) {
+        $scope.selectedRecipe = recipe;
+        $('#recipe-delete-modal').modal('show');
     };
 
     $scope.init();

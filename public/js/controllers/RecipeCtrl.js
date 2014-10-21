@@ -1,11 +1,11 @@
-angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $rootScope, $routeParams, $location, Recipe, Ingredient, RecipeIngredient) {
+angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $rootScope, $routeParams, $location, Recipe, Ingredients, RecipeIngredient) {
     console.info('RecipeCtrl');
 
     $scope.init = function () {
         $scope.recipeIngredients = {};
 
         if (!$scope.recipe || $scope.recipe.id != $routeParams.id) {
-            $scope.recipe = {id: $routeParams.id};
+            $scope.recipe = {id: $routeParams.id, name: '', description: ''};
 
             if (typeof $scope.recipe.id !== 'undefined') {
                 Recipe.get($scope.recipe.id).success(function(response) {
@@ -23,7 +23,7 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
         }
 
         if (!$scope.ingredients) {
-            Ingredient.getAll().success(function(response) {
+            Ingredients.getAll().success(function(response) {
                 $rootScope.ingredients = response;
             });
         }
@@ -84,34 +84,38 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
         // @todo Modal title in the view
         if (recipeIngredient) {
             $scope.selectedRecipeIngredient = $.extend({}, recipeIngredient);
+            $scope.selectedIngredient = findIngredientById($scope.selectedRecipeIngredient.ingredient_id);
             $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Edit recipe ingredient');
         } else {
             $scope.selectedRecipeIngredient = {recipe_id: $scope.recipe.id};
+            $scope.selectedIngredient = {};
             $('#recipe-ingredient-add-modal').modal('show').find('.modal-title').text('Add recipe ingredient');
         }
     };
 
     $scope.saveRecipeIngredient = function() {
-        var promise, ingredient = {}, i;
-
-        for (i in $scope.ingredients) {
-            if ($scope.ingredients[i].id === $scope.selectedRecipeIngredient.ingredient_id) {
-                ingredient = $scope.ingredients[i];
-                break;
-            }
-        }
-
+        var promise;
         if (typeof $scope.selectedRecipeIngredient.id === 'undefined') {
             promise = RecipeIngredient.add($scope.selectedRecipeIngredient).success(function(data, status, headers) {
+                var recipeIngredient = {}, ingredient;
                 $scope.selectedRecipeIngredient.id = headers('Location').match(/\d+$/)[0];
-                var recipeIngredient = $.extend({}, ingredient, $scope.selectedRecipeIngredient);
+
+                ingredient = findIngredientById($scope.selectedRecipeIngredient.ingredient_id);
+                recipeIngredient = $.extend({}, ingredient, $scope.selectedRecipeIngredient);
                 $scope.recipeIngredients.push(recipeIngredient);
             });
         } else {
             promise = RecipeIngredient.edit($scope.selectedRecipeIngredient).success(function(data, status, headers) {
-                for (var i in $scope.recipeIngredients) {
-                    if ($scope.recipeIngredients[i].id === $scope.selectedRecipeIngredient.id) {
-                        $scope.recipeIngredients[i] = $.extend({}, ingredient, $scope.selectedRecipeIngredient);
+                var recipeIngredient = {}, i;
+                for (i in $scope.recipeIngredients) {
+                    recipeIngredient = $scope.recipeIngredients[i];
+                    if (recipeIngredient.id === $scope.selectedRecipeIngredient.id) {
+                        $scope.recipeIngredients[i] = $.extend(
+                            {},
+                            $scope.selectedRecipeIngredient,
+                            $scope.selectedIngredient,
+                            {id: recipeIngredient.id}
+                        );
                         break;
                     }
                 }
@@ -136,6 +140,18 @@ angular.module('RecipeCtrl', []).controller('RecipeController', function($scope,
             $scope.calculateIngredientTotals();
         });
     };
+
+    $scope.ingredientSelected = function () {
+        $scope.selectedRecipeIngredient.ingredient_id = $scope.selectedIngredient.id;
+    };
+
+    function findIngredientById(ingredientId) {
+        for (var i in $scope.ingredients) {
+            if ($scope.ingredients[i].id == ingredientId) {
+                return $scope.ingredients[i];
+            }
+        }
+    }
 
     $('#ingredient-add-modal').on('shown.bs.modal', function() {
         $(':text:first', this).focus();

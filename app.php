@@ -120,6 +120,13 @@ $app->put('/recipes/:id', function() use ($app, $oDB) {
     $app->response->setStatus(204);
 });
 
+$app->delete('/recipes/:id', function($id) use ($app, $oDB) {
+    $oRecipe = new Recipe($oDB);
+    $oRecipe->delete($id);
+
+    $app->response->setStatus(200);
+});
+
 // ------- RECIPE INGREDIENTS -------
 $app->post('/recipes/:id/ingredients', function() use ($app, $oDB) {
     $oRecipeIngredient = new RecipeIngredient($oDB);

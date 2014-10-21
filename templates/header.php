@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Recipes</title>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="/css/main.css" rel="stylesheet" />
     <!--<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css" rel="stylesheet">-->
@@ -15,8 +15,8 @@
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js"></script>
 
     <!-- JS -->
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular-route.min.js"></script>
 
     <!-- ANGULAR CUSTOM -->
     <script src="/js/controllers/MainCtrl.js"></script>
@@ -24,7 +24,8 @@
     <script src="/js/services/RecipesService.js"></script>
     <script src="/js/controllers/RecipeCtrl.js"></script>
     <script src="/js/services/RecipeService.js"></script>
-    <script src="/js/services/IngredientService.js"></script>
+    <script src="/js/controllers/IngredientsCtrl.js"></script>
+    <script src="/js/services/IngredientsService.js"></script>
     <script src="/js/services/RecipeIngredientService.js"></script>
     <script src="/js/appRoutes.js"></script>
     <script src="/js/app.js"></script>

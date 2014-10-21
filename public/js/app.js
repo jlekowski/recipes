@@ -6,6 +6,7 @@ angular.module('recipes', [
     'RecipesService',
     'RecipeCtrl',
     'RecipeService',
-    'IngredientService',
+    'IngredientsCtrl',
+    'IngredientsService',
     'RecipeIngredientService'
 ]);

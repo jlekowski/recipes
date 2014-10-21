@@ -12,8 +12,25 @@
         <tr class="recipe-row" ng-repeat="recipe in recipes | orderBy:sortColumn:sortReverse">
             <td>{{recipe.id}}</td>
             <td><a href="/recipes/{{recipe.id}}" ng-click="selectRecipe(recipe)">{{recipe.name}}</a></td>
-            <td><i class="glyphicon glyphicon-remove" ng-click="deleteRecipe(recipe)"></i></td>
+            <td><i class="glyphicon glyphicon-remove" ng-click="confirmDeleteRecipe(recipe)"></i></td>
         </tr>
         </tbody>
     </table>
+</div>
+<div class="modal fade" id="recipe-delete-modal" tabindex="-1" role="dialog" aria-labelledby="recipe-delete-modal-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                <h4 class="modal-title" id="recipe-delete-modal-label">Delete recipe</h4>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete recipe <strong class="recipe-delete-name"></strong>?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-sm btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-sm btn-danger" ng-click="deleteRecipe()">Delete</button>
+            </div>
+        </div>
+    </div>
 </div>

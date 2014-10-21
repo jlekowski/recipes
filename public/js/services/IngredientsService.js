@@ -1,4 +1,4 @@
-angular.module('IngredientService', []).factory('Ingredient', ['$http', function($http) {
+angular.module('IngredientsService', []).factory('Ingredients', ['$http', function($http) {
     return {
         get: function(id) {
             return $http.get('/ingredients/' + id);
