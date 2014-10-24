@@ -1,5 +1,6 @@
 angular.module('RecipeCtrl', []).controller('RecipeController', function($scope, $rootScope, $routeParams, $location, Recipe, Ingredients, RecipeIngredient) {
     console.info('RecipeCtrl');
+    $rootScope.activeMenu = 'recipes';
 
     $scope.init = function () {
         $scope.recipeIngredients = {};

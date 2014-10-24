@@ -1,5 +1,6 @@
 angular.module('IngredientsCtrl', []).controller('IngredientsController', function($scope, $rootScope, Ingredients) {
     console.info('IngredientsCtrl');
+    $rootScope.activeMenu = 'ingredients';
 
     $scope.init = function () {
         if (!$scope.ingredients) {
@@ -13,14 +14,14 @@ angular.module('IngredientsCtrl', []).controller('IngredientsController', functi
     $scope.sortReverse = false;
 
     $scope.addIngredient = function(ingredient) {
-        // @todo Modal title in the view
         if (ingredient) {
             $scope.selectedIngredient = ingredient;
-            $('#ingredient-add-modal').modal('show').find('.modal-title').text('Edit ingredient');
+            $scope.modalTitle = 'Edit ingredient';
         } else {
             $scope.selectedIngredient = {kcal: '', protein: '', fat: '', carb: ''};
-            $('#ingredient-add-modal').modal('show').find('.modal-title').text('Add ingredient');
+            $scope.modalTitle = 'Add ingredient';
         }
+        $('#ingredient-add-modal').modal('show');
     };
 
     $scope.save = function() {
